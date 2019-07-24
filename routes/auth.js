@@ -13,7 +13,11 @@ const saltRounds = 10;
 
 // enviara el formulario al usuario
 router.get('/signup', isLoggedIn, (req, res, next) => {
-  res.render('signup');
+  const data = {
+    messages: req.flash('errorFormNotFilled'),
+    formData: req.flash('errorDataform')
+  };
+  res.render('signup', data);
 });
 
 router.post('/signup', isLoggedIn, isFormFilled, async (req, res, next) => {
@@ -61,7 +65,7 @@ router.post('/login', isLoggedIn, isFormFilled, async (req, res, next) => {
   }
 });
 
-// recogera la informaciión del usuario y la guarda en la base de datos
+// recogera la información del usuario y la guarda en la base de datos
 router.post('/logout', isNotLoggedIn, (req, res, next) => {
   delete req.session.currentUser;
   res.redirect('/auth/login');

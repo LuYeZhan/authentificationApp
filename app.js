@@ -1,3 +1,4 @@
+'use strict';
 
 const express = require('express');
 const path = require('path');
@@ -7,12 +8,17 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
+const recipesRouter = require('./routes/recipes');
+const apiRouter = require('./routes/api');
 
 const session = require('express-session');
 // connect mongo es una funcion que acepta session como parametro
 const MongoStore = require('connect-mongo')(session);
 
 const mongoose = require('mongoose');
+
+const flash = require('connect-flash');
+
 const app = express();
 
 mongoose.connect('mongodb://localhost/database-name', {
@@ -35,6 +41,8 @@ app.use(session({
   }
 }));
 
+app.use(flash());
+
 // Makes the currentUser available in every page
 // note1: currentUser needs to match whatever you use in login/signup/logout routes
 // note2: if using passport, req.user instead
@@ -56,6 +64,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
+app.use('/recipes', recipesRouter);
+app.use('/api', apiRouter);
 
 // -- 404 and error handler
 
